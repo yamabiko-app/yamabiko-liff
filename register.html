@@ -30,7 +30,7 @@ input:focus{outline:none;border-color:#06c755}
 <div id="form-area" class="card">
   <div class="field"><label>&#27663;&#21517;<span class="req">*</span></label><input type="text" id="name" placeholder="&#23665;&#30000; &#22826;&#37070;" autocomplete="name"></div>
   <div class="field"><label>&#38651;&#35441;&#30058;&#21495;</label><input type="tel" id="phone" placeholder="090-0000-0000" autocomplete="tel"></div>
-  <div class="field"><label>&#37109;&#20415;&#30058;&#21495;<span class="req">*</span></label><input type="text" id="postal" placeholder="000-0000" maxlength="8" autocomplete="postal-code"></div>
+  <div class="field"><label>&#37109;&#20415;&#30058;&#21495;<span class="req">*</span></label><input type="text" id="postal" placeholder="000-0000" maxlength="8" autocomplete="postal-code" oninput="onPostal(this.value)"></div>
   <div class="field"><label>&#37117;&#36947;&#24220;&#30476;<span class="req">*</span></label><input type="text" id="pref" placeholder="&#26481;&#20140;&#37117;" autocomplete="address-level1"></div>
   <div class="field"><label>&#24066;&#21306;&#30010;&#26449;<span class="req">*</span></label><input type="text" id="city" placeholder="&#28171;&#35895;&#21306;&#28171;&#35895;" autocomplete="address-level2"></div>
   <div class="field"><label>&#30058;&#22320;<span class="req">*</span></label><input type="text" id="street" placeholder="1-2-3"></div>
@@ -48,9 +48,22 @@ var uid=null;
     if(!liff.isLoggedIn()){liff.login();return;}
     var p=await liff.getProfile();
     uid=p.userId;
-    document.getElementById('name').value=p.displayName||'';
   }catch(e){console.error(e);}
 })();
+async function onPostal(v){
+  var z=v.replace(/[^d]/g,'');
+  if(z.length!==7)return;
+  try{
+    var r=await fetch('https://zipcloud.ibsnet.co.jp/api/search?zipcode='+z);
+    var d=await r.json();
+    if(d.results&&d.results[0]){
+      var a=d.results[0];
+      document.getElementById('pref').value=a.address1;
+      document.getElementById('city').value=a.address2+a.address3;
+      document.getElementById('street').focus();
+    }
+  }catch(e){}
+}
 async function doSubmit(){
   var btn=document.getElementById('btn');
   var err=document.getElementById('err');
@@ -62,9 +75,9 @@ async function doSubmit(){
   var city=document.getElementById('city').value.trim();
   var street=document.getElementById('street').value.trim();
   var building=document.getElementById('building').value.trim();
-  if(!name||!postal||!pref||!city||!street){err.textContent='必須項目を入力してください。';return;}
-  if(!uid){err.textContent='LINEログインが必要です。ページを再読み込みしてください。';return;}
-  btn.disabled=true;btn.textContent='送信中...';
+  if(!name||!postal||!pref||!city||!street){err.textContent='\u5fc5\u9808\u9805\u76ee\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002';return;}
+  if(!uid){err.textContent='LINE\u30ed\u30b0\u30a4\u30f3\u304c\u5fc5\u8981\u3067\u3059\u3002\u30da\u30fc\u30b8\u3092\u518d\u8aad\u307f\u8fbc\u307f\u3057\u3066\u304f\u3060\u3055\u3044\u3002';return;}
+  btn.disabled=true;btn.textContent='\u9001\u4fe1\u4e2d...';
   try{
     var r=await fetch('https://apaaevulcddwtyvkurlx.supabase.co/functions/v1/line-bot/liff',{
       method:'POST',
@@ -77,8 +90,8 @@ async function doSubmit(){
     document.getElementById('ok').style.display='block';
     setTimeout(()=>liff.closeWindow(),3000);
   }catch(e){
-    err.textContent='送信に失敗しました。もう一度お試しください。';
-    btn.disabled=false;btn.textContent='登録する';
+    err.textContent='\u9001\u4fe1\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002';
+    btn.disabled=false;btn.textContent='\u767b\u9332\u3059\u308b';
   }
 }
 </script>
