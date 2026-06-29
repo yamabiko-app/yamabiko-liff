@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yamabiko — 決済完了</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, "Hiragino Sans", sans-serif;
+      background: #f0faf0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 40px 32px;
+      max-width: 360px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    .icon { font-size: 56px; margin-bottom: 20px; }
+    h1 { font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 12px; }
+    p  { font-size: 15px; color: #555; line-height: 1.6; margin-bottom: 8px; }
+    .note { font-size: 13px; color: #999; margin-top: 20px; }
+    .btn {
+      display: inline-block;
+      margin-top: 28px;
+      padding: 14px 32px;
+      background: #06c755;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 50px;
+      text-decoration: none;
+    }
+    .canceled .icon { filter: grayscale(1); }
+    .canceled h1 { color: #888; }
+  </style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="icon" id="icon">✅</div>
+  <h1 id="title">お支払いが完了しました</h1>
+  <p id="msg">Yamabikoへようこそ！</p>
+  <p>LINEに戻ってご利用を開始してください。</p>
+  <p class="note" id="note">このページを閉じて LINE に戻ってください。</p>
+  <a href="https://line.me/R/ti/p/@191zpkfr" class="btn">LINEへ戻る</a>
+</div>
+<script>
+  const canceled = new URLSearchParams(location.search).get("canceled");
+  if (canceled) {
+    document.getElementById("card").classList.add("canceled");
+    document.getElementById("icon").textContent  = "❌";
+    document.getElementById("title").textContent = "決済がキャンセルされました";
+    document.getElementById("msg").textContent   = "プランの選択からやり直せます。";
+    document.getElementById("note").textContent  = "LINEに戻ってプランを再選択してください。";
+  }
+</script>
+</body>
+</html>
