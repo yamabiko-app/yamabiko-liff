@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>&#20303;&#25152;&#12434;&#30331;&#37682; &mdash; Yamabiko</title>
-<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script src="https://static.line-scdn.net/liffjs/2.22.3/sdk.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,sans-serif;background:#f5f5f5;padding:20px}
@@ -43,6 +43,7 @@ input:focus{outline:none;border-color:#06c755}
 <script>
 var uid=null;
 (async()=>{
+  if(typeof liff==='undefined'){try{var m=await import('https://esm.sh/@line/liff@2.22.3');window.liff=m.default||m;}catch(e){return;}}
   try{
     await liff.init({liffId:'2010533139-b0B55CJC'});
     if(!liff.isLoggedIn()){liff.login();return;}
