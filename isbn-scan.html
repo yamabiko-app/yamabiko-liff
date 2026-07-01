@@ -110,6 +110,15 @@ var scannerRunning = false;
 
 (async function init() {
   var root = document.getElementById('root');
+  if (typeof liff === 'undefined') {
+    try {
+      var mod = await import('https://esm.sh/@line/liff@2.22.3');
+      window.liff = mod.default || mod;
+    } catch (e) {
+      root.innerHTML = '<div class="alert"><div class="icon">⚠️</div><h2>SDK読み込みエラー</h2><p>' + String(e) + '</p></div>';
+      return;
+    }
+  }
   try {
     await liff.init({ liffId: '2010533139-PihjYozs' });
   } catch (e) {
