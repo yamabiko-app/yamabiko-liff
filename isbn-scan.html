@@ -113,7 +113,8 @@ var scannerRunning = false;
   try {
     await liff.init({ liffId: '2010533139-PihjYozs' });
   } catch (e) {
-    root.innerHTML = '<div class="alert"><div class="icon">⚠️</div><h2>初期化エラー</h2><p>' + e.message + '</p></div>';
+    var msg = (e && (e.message || e.code || String(e))) || '不明なエラー';
+    root.innerHTML = '<div class="alert"><div class="icon">⚠️</div><h2>初期化エラー</h2><p>' + msg + '</p><p style="font-size:11px;color:#999;margin-top:8px">LIFF ID: 2010533139-PihjYozs</p></div>';
     return;
   }
 
